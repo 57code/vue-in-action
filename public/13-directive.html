@@ -1,0 +1,26 @@
+<div id="app">
+  {{ foo }}
+
+  <input type="text" v-focus>
+</div>
+<script src="https://unpkg.com/vue@next"></script>
+<script>
+  const { createApp } = Vue
+  const app = createApp({
+    data() {
+      return {
+        foo: '自定义指令'
+      }
+    },
+
+    directives: {
+      focus: {
+        mounted(el) {
+          el.focus()
+        }
+      }
+    }
+  })
+  // app.directive()
+  app.mount('#app')
+</script>

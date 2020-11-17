@@ -1,0 +1,42 @@
+<!-- 宿主元素 -->
+<div id="app">
+  <h1>{{title}}</h1>
+  <comp title="foo" @some-event="onSomeEvent"></comp>
+  <comp2 :title="foo" :bar="[1,2,3]" v-bind="{id:1, title:'bla'}"></comp2>
+</div>
+
+<!-- 引入vue -->
+<script src="https://unpkg.com/vue@next"></script>
+<script>
+  // 创建一个应用程序的实例
+  const app = Vue.createApp({
+    data() {
+      return {
+        title: "vue3组件化"
+      };
+    },
+    components: {
+      comp2: {
+        template: '<div>comp2</div>'
+      },
+    },
+    methods: {
+      onSomeEvent() {
+        console.log('收到了来自comp组件的某个事件');
+      }
+    },
+  })
+  // 全局注册
+  app.component('comp', {
+    template: '<div @click="$emit(\'some-event\')">comp, {{title}}</div>',
+    // props: ['title']
+    props: {
+      title: {
+        type: String,
+        required: true
+      },
+    },
+    emits: ['some-event']
+  })
+  app.mount("#app");
+</script>

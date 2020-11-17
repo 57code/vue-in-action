@@ -1,0 +1,152 @@
+<!-- 消息组件 -->
+<style>
+  .message-box {
+    padding: 10px 20px;
+    background: #4fc08d;
+    border: 1px solid #42b983;
+    color: #fff
+  }
+  .message-box-close {
+    float: right;
+    cursor: pointer;
+  }
+</style>
+<script type="text/x-template" id="message">
+  <div class="message-box">
+    <h3>
+      <!-- 具名插槽 -->
+      <slot name="title"></slot>
+      <span class="message-box-close"
+        @click="$emit('close')">X</span>
+    </h3>
+    <!-- 匿名插槽 -->
+    <slot></slot>
+  </div>
+</script>
+<script>
+  const Message = {
+    template: '#message',
+    emits: ['close']
+  }
+</script>
+<script type="text/x-template" id="course-add">
+  <!-- 表单输入 -->
+  <input type="text" 
+   :value="course"
+   @input="$emit('update:course', $event.target.value)"
+   @keydown.enter="addCourse" />
+  <!-- 事件处理 -->
+  <button v-on:click="addCourse">新增课程</button>
+</script>
+<script>
+  const CourseAdd = {
+    template: '#course-add',
+    props: {
+      // model-value
+      course: {
+        type: String,
+        required: true 
+      },
+    },
+    // data() {
+      //   return {
+        //     course: ''
+        //   }
+        // },
+    emits: ['update:course', 'add'],
+    methods: {
+      addCourse() {
+        this.$emit('add')
+        // this.course = ''
+      }
+    }
+  }
+</script>
+
+<script type="text/x-template" id="course-list">
+  <!-- 条件渲染 -->
+  <p v-if="courses.length === 0">没有任何课程信息</p>
+  <!-- 列表渲染 -->
+  <ul>
+    <li
+      v-for="c in courses"
+      :key="c"
+      :class="{active: selectedCourse === c}"
+      @click="selectedCourse = c"
+    >
+      {{c}}
+    </li>
+  </ul>
+</script>
+<script>
+  const CourseList = {
+    template: "#course-list",
+    data() {
+      return {
+        selectedCourse: "",
+      };
+    },
+    props: {
+      courses: {
+        type: Array,
+        required: true,
+      },
+    },
+  };
+</script>
+
+<!-- 宿主元素 -->
+<div id="app">
+  <!-- 消息提示框 -->
+  <message v-if="showMsg" @close="showMsg = false">
+    <template v-slot:title>
+      恭喜
+    </template>
+    <template v-slot:default>
+      新增课程成功！
+    </template>
+  </message>
+  
+  <course-add v-model:course="course" @add="addCourse"></course-add>
+
+  <course-list :courses="courses"></course-list>
+</div>
+
+<!-- 引入vue -->
+<script src="https://unpkg.com/vue@next"></script>
+<script>
+  // 创建一个应用程序的实例
+  Vue.createApp({
+    components: {
+      'course-add': CourseAdd
+    },
+    data() {
+      return {
+        courses: [],
+        course: '',
+        showMsg: false
+      };
+    },
+    created() {
+      setTimeout(() => {
+        this.courses = ["web全栈架构师", "web高级工程师"];
+      }, 1000);
+    },
+    methods: {
+      addCourse() {
+        this.courses.push(this.course);
+        this.course = ''
+
+        this.showMsg = true
+      },
+    },
+  })
+    .component("course-list", CourseList)
+    .component("message", Message)
+    .mount("#app");
+</script>
+<style>
+  .active {
+    background-color: #ccc;
+  }
+</style>

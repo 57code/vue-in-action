@@ -1,0 +1,32 @@
+<!-- 宿主元素 -->
+<div id="app">
+  <!-- 插值、特性绑定 -->
+  <h1 :class="{'active': isActive, 'text-danger': hasError}">动态样式</h1>
+  <p :style="{color: activeColor, fontSize: fontSize + 'px'}">bla bla~~~~</p>
+</div>
+
+<!-- 引入vue -->
+<script src="https://unpkg.com/vue@next"></script>
+<script>
+  // 创建一个应用程序的实例
+  const app = Vue.createApp({
+    data() {
+      return {
+        isActive: true,
+        hasError: true,
+        activeColor: 'green',
+        fontSize: 30
+      };
+    },
+  }).mount("#app");
+
+  setTimeout(() => {
+    app.isActive = false
+    app.fontSize = 60
+  }, 2000);
+</script>
+<style>
+  .active {
+    background-color: #ccc
+  }
+</style>

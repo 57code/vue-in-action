@@ -1,0 +1,36 @@
+<div id="app">{{ foo }} {{ bar }}</div>
+<script src="https://unpkg.com/vue@next"></script>
+<script>
+  const { createApp } = Vue
+
+  const myMixin = {
+    data() {
+      return {
+        bar: 'baz',
+        foo: 'foo'
+      }
+    },
+    created() {
+      console.log('hello from mixin!');
+    }
+  }
+  
+  const app = createApp({
+    data() {
+      return {
+        foo: 'bar'
+      }
+    },
+    mixins: [myMixin],
+    created() {
+      console.log('hello from app!');
+    }
+  })
+  // 全局混入，应用程序级别都可以使用
+  app.mixin({
+    created() {
+      console.log('hello from global mixin!');
+    }
+  })
+  app.mount('#app')
+</script>

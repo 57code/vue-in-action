@@ -1,0 +1,51 @@
+<!-- 宿主元素 -->
+<div id="app">
+  <!-- v-model基础用法 -->
+  <!-- text/textarea -->
+  <input type="text" v-model="message">
+  <p>{{message}}</p>
+  <!-- radio/checkbox -->
+  <input type="checkbox" v-model="checked">
+  <p>{{checked}}</p>
+  <!-- checkbox 多个 -->
+  <div>
+    <input type="checkbox" value="bj" v-model="checkedCities" id="bj">
+    <label for="bj">北京</label>
+    <input type="checkbox" value="sh" v-model="checkedCities" id="sh">
+    <label for="sh">上海</label>
+    <input type="checkbox" value="tj" v-model="checkedCities" id="tj">
+    <label for="tj">天津</label>
+    <p>{{checkedCities}}</p>
+  </div>
+  <!-- select -->
+  <div>
+    <select v-model="selected">
+      <option disabled value="">请选择</option>
+      <option value="A">A</option>
+      <option value="B">B</option>
+      <option value="C">C</option>
+    </select>
+    <p>{{selected}}</p>
+  </div>
+</div>
+
+<!-- 引入vue -->
+<script src="https://unpkg.com/vue@next"></script>
+<script>
+  // 创建一个应用程序的实例
+  Vue.createApp({
+    data() {
+      return {
+        message: '',
+        checked: false,
+        checkedCities: ['bj', 'tj'],
+        selected: ''
+      };
+    },
+  }).mount("#app");
+</script>
+<style>
+  .active {
+    background-color: #ccc;
+  }
+</style>

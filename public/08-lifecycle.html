@@ -1,0 +1,60 @@
+<!-- 宿主元素 -->
+<div id="app">
+  <h1 :title="title">{{title}}</h1>
+</div>
+
+<!-- 引入vue -->
+<script src="https://unpkg.com/vue@next"></script>
+<script>
+  // 创建一个应用程序的实例
+  const app = Vue.createApp({
+    data() {
+      return {
+        title: "vue生命周期",
+        counter: 1
+      };
+    },
+    // 初始化阶段
+    beforeCreate() {
+      console.log('beforeCreated');
+    },
+    created() {
+      console.log('created');
+    },
+    beforeMount() {
+      console.log('beforeMount');
+    },
+    mounted() {
+      console.log('mounted');
+      setInterval(() => {
+        this.counter++
+        if (this.counter == 5) {
+          app.unmount()
+        } else {
+          this.title = this.title.split('').reverse().join('')
+        }
+      }, 1000);
+      this.$nextTick(() => {})
+    },
+    beforeUpdate() {
+      console.log('beforeUpdate');
+    },
+    updated() {
+      console.log('updated');
+      this.$nextTick(() => {})
+    },
+    beforeUnmount() {
+      console.log('beforeUnmount');
+    },
+    unmounted() {
+      console.log('unmounted');
+    },
+    renderTracked({key, type, target}) {
+      console.log(key, type, target);
+    },
+    renderTriggered({key, type, target}) {
+      console.log(key, type, target);
+    }
+  })
+  app.mount("#app");
+</script>

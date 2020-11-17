@@ -1,0 +1,120 @@
+<div id="app">
+  <p ref="p1">{{counter}}</p>
+  <p>{{count}}</p>
+  <comp ref="comp" dong="dong" tua="tua">some content</comp>
+</div>
+<script src="https://unpkg.com/vue@next"></script>
+<script>
+  const { createApp, reactive, h,
+    getCurrentInstance, ref, toRefs,
+    watchEffect, watch, onMounted, onUnmounted,
+     provide, inject } = Vue
+
+
+  function useCounter() {
+    const counter = ref(0)
+    let timer
+    onMounted(() => {
+      timer = setInterval(() => counter.value++, 1000)
+    })
+    onUnmounted(() => {
+      clearInterval(timer)
+    })
+    return counter
+  }
+
+  const vm = createApp({
+    // 参数：
+    setup(props, ctx) {
+      // 依赖注入
+      provide('colorTheme', 'dark')
+
+      // 获取组件实例
+      const ins = getCurrentInstance()
+      console.log(ins);
+
+      // 单值响应式
+      const count = ref(0)
+      console.log(count.value);
+      count.value++
+      console.log(count.value);
+
+      const counter = useCounter()
+      const state = reactive({
+        counter,
+        count
+      })
+
+      // setup执行时刻在beforeCreate之前
+      onMounted(() => {
+        setInterval(() => {
+          // state.counter++
+          state.count++
+        }, 1000);
+      })
+
+      // toRefs: 
+
+      // watchEffect：监控副作用
+      watchEffect(() => {
+        console.log('count发生了变化：', count.value);
+      })
+
+      // watch: 监听器
+      watch(
+        () => state.counter,
+        (count, prevCount) => {
+          // to something
+          console.log('counter发生了变化');
+        }
+      )
+
+      watch(count, (count, prevCount) => {
+        // to something
+        console.log('count发生了变化');
+      })
+
+      // 模板引用
+      const p1 = ref(null)
+      const comp = ref(null)
+      
+      onMounted(() => {
+        console.log(p1.value) // p的dom
+        console.log(comp.value) // comp组件实例的上下文
+      })
+      
+      // 1.返回render函数上下文对象
+      return {
+        ...toRefs(state),
+        p1,
+        comp
+      }
+
+      // 2.返回一个渲染函数，这里自然可以是jsx
+      // return () => h('div', state.counter)
+    },
+    components: {
+      Comp: {
+        template: `<div>comp<slot/></div>`,
+        props: {
+          dong: {
+            type: String,
+            default: ''
+          },
+        },
+        setup(props, { attrs, slots, emit }) {
+          console.log(props, attrs, slots, emit);
+
+          // 注入祖代传入的值 
+          const theme = inject('colorTheme')
+          console.log(theme);
+          return { dong: props.dong }
+        }
+      }
+    }
+  }).mount('#app')
+
+  // setInterval(() => {
+  //   vm.state.counter++
+  // }, 1000);
+</script>

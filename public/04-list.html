@@ -1,0 +1,40 @@
+<!-- 宿主元素 -->
+<div id="app">
+  <!-- 条件渲染 -->
+  <p v-if="courses.length === 0">没有任何课程信息</p>
+  <!-- 列表渲染 -->
+  <ul>
+    <li
+      v-for="c in courses"
+      :key="c"
+      :class="{active: selectedCourse === c}"
+      @click="selectedCourse = c"
+    >
+      {{c}}
+    </li>
+  </ul>
+</div>
+
+<!-- 引入vue -->
+<script src="https://unpkg.com/vue@next"></script>
+<script>
+  // 创建一个应用程序的实例
+  Vue.createApp({
+    data() {
+      return {
+        courses: [],
+        selectedCourse: "",
+      };
+    },
+    created() {
+      setTimeout(() => {
+        this.courses = ["web全栈架构师", "web高级工程师"];
+      }, 1000);
+    },
+  }).mount("#app");
+</script>
+<style>
+  .active {
+    background-color: #ccc;
+  }
+</style>

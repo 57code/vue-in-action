@@ -1,0 +1,43 @@
+<div id="watch-example">
+  <p>
+    Ask a yes/no question:
+    <input v-model="question" />
+  </p>
+  <p>{{ answer }}</p>
+</div>
+
+<!-- 因为 AJAX 库和通用工具的生态已经相当丰富，Vue 核心代码没有重复 -->
+<!-- 提供这些功能以保持精简。这也可以让你自由选择自己更熟悉的工具。 -->
+<script src="https://unpkg.com/vue@next"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
+<script>
+  const watchExampleVM = Vue.createApp({
+    data() {
+      return {
+        question: '',
+        answer: 'Questions usually contain a question mark. ;-)'
+      }
+    },
+    watch: {
+      // whenever question changes, this function will run
+      question(newQuestion, oldQuestion) {
+        if (newQuestion.indexOf('?') > -1) {
+          this.getAnswer()
+        }
+      }
+    },
+    methods: {
+      getAnswer() {
+        this.answer = 'Thinking...'
+        axios
+          .get('https://yesno.wtf/api')
+          .then(response => {
+          this.answer = response.data.answer
+        })
+          .catch(error => {
+          this.answer = 'Error! Could not reach the API. ' + error
+        })
+      }
+    }
+  }).mount('#watch-example')
+</script>

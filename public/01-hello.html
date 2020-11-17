@@ -1,0 +1,45 @@
+<!-- 宿主元素 -->
+<div id="app">
+  <!-- 插值、特性绑定 -->
+  <h1 :title="title">{{title}}</h1>
+  <!-- 计算属性 -->
+  <h1>{{reverseTitle}}</h1>
+  <!-- 侦听器 -->
+  <h1>{{reverseTitle2}}</h1>
+  <!-- html内容 -->
+  <p v-html="rawHtml"></p>
+</div>
+
+<!-- 引入vue -->
+<script src="https://unpkg.com/vue@next"></script>
+<script>
+  // 创建一个应用程序的实例
+  Vue.createApp({
+    data() {
+      return {
+        title: "开课吧vue3从入门到精通",
+        rawHtml: '<span style="color:red">村长真棒</span>',
+        reverseTitle2: "",
+      };
+    },
+    // 计算属性
+    computed: {
+      reverseTitle() {
+        return this.title.split("").reverse().join("");
+      },
+    },
+    // 侦听器
+    watch: {
+      // title(newValue, oldValue) {
+      //   this.reverseTitle2 = newValue.split('').reverse().join('')
+      // },
+      title: {
+        immediate: true, // 立刻执行
+        // deep: true, // 深度侦听内部嵌套属性
+        handler(newValue, oldValue) {
+          this.reverseTitle2 = newValue.split("").reverse().join("");
+        },
+      },
+    },
+  }).mount("#app");
+</script>
