@@ -10,11 +10,11 @@
 export default {
   name: "HelloWorld",
   props: {
-    msg: String
+    msg: String,
   },
   data() {
     return {
-      count: 0
+      count: 0,
     };
   },
 };
