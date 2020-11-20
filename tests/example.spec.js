@@ -8,6 +8,6 @@ describe("aaa", () => {
         msg: "hello,vue3",
       },
     });
-    expect(wrapper.text()).toBe("hello,vue3");
+    expect(wrapper.text()).toMatch("hello,vue3");
   });
 });
