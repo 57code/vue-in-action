@@ -1,5 +1,5 @@
 <template>
-  <Comp></Comp>
+  <Compts></Compts>
   <!-- 相对地址 -->
   <!-- <img src="./assets/logo.png" alt=""> -->
   <!-- 绝对路径 -->
@@ -21,11 +21,11 @@
 <script>
 import { reactive, onMounted, ref, toRefs, computed, watch } from "vue";
 import CourseAdd from "./components/CourseAdd.vue";
-import Comp from "./components/Comp.vue";
+import Compts from "./components/Compts.vue";
 export default {
   components: {
     "course-add": CourseAdd,
-    Comp,
+    Compts,
   },
   setup() {
     const state = reactive({
