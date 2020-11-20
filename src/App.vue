@@ -1,5 +1,4 @@
 <template>
-  <!-- ts -->
   <Compts></Compts>
   <!-- 相对地址 -->
   <!-- <img src="./assets/logo.png" alt=""> -->
