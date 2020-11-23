@@ -21,8 +21,8 @@
 
 <script>
 import { reactive, onMounted, ref, toRefs, computed, watch } from "vue";
-import CourseAdd from "./components/CourseAdd.vue";
-import Compts from "./components/Compts.vue";
+import CourseAdd from "/comps/CourseAdd.vue";
+import Compts from "/comps/Compts.vue";
 export default {
   components: {
     "course-add": CourseAdd,
@@ -59,6 +59,14 @@ export default {
         }
       );
     });
+
+    fetch("/api/users")
+      .then(resp => resp.json())
+      .then(data => {
+        console.log(data);
+      });
+
+    console.log(import.meta.env.VITE_TOKEN);
 
     return { ...toRefs(state), showMsg, addCourse };
   },
