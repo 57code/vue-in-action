@@ -1,10 +1,10 @@
 import { createApp } from "vue";
 import App from "./App.vue";
 import "./index.css";
-import CourseList from "./components/CourseList.vue";
 import Message from "./components/Message.vue";
+import router from "./router/index";
 
 createApp(App)
-  .component("course-list", CourseList)
+  .use(router)
   .component("message", Message)
   .mount("#app");
