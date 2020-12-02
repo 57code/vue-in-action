@@ -15,7 +15,7 @@ export default {
   setup() {
     const course = ref({ name: "", price: "" });
     const route = useRoute();
-    console.log(route.params.id);
+    // console.log(route.params.id);
     getCourseById(route.params.id).then(ret => {
       course.value = ret;
     });

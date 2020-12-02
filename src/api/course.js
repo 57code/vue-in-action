@@ -8,7 +8,7 @@ export function getCourses() {
 }
 
 export function addCourse(name) {
-  courses.push(name);
+  courses.push({ id: courses.length + 1, name });
   return Promise.resolve(true);
 }
 

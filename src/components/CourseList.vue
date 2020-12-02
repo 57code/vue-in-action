@@ -4,7 +4,8 @@
 
   <!-- 新增链接 -->
   <p>
-    <router-link to="/add">新增</router-link>
+    <!-- <router-link to="/course/add">新增</router-link> -->
+    <button @click="$router.push('/course/add')">新增</button>
   </p>
 
   <!-- 列表渲染 -->
@@ -13,25 +14,38 @@
       v-for="c in courses"
       :key="c.id"
       :class="{ active: selectedCourse === c }"
-      @click="selectedCourse = c"
+      @click="showDetail(c)"
     >
-      <router-link :to="'/course/' + c.id">{{ c.name }}</router-link>
+      {{ c.name }}
     </li>
   </ul>
+
+  <router-view></router-view>
 </template>
 <script>
 import { ref } from "vue";
 import { getCourses } from "../api/course";
+import { useRouter } from "vue-router";
 export default {
-  data() {
-    return {
-      selectedCourse: "",
-    };
-  },
+  // data() {
+  //   return {
+  //     selectedCourse: "",
+  //   };
+  // },
   setup() {
     const courses = ref([]);
     getCourses().then(result => (courses.value = result));
-    return { courses };
+
+    const selectedCourse = ref(null);
+    const router = useRouter();
+    const showDetail = c => {
+      selectedCourse.value = c;
+
+      // 跳转
+      router.push({ name: "detail", params: { id: c.id } });
+    };
+
+    return { courses, showDetail, selectedCourse };
   },
   // props: {
   //   courses: {
