@@ -1,4 +1,9 @@
 <template>
+  <message v-if="showMsg" @close="showMsg = false">
+    <template v-slot:title> 恭喜 </template>
+    <template v-slot:default> 新增课程成功！ </template>
+  </message>
+
   <!-- 条件渲染 -->
   <p v-if="courses.length === 0">没有任何课程信息</p>
 
@@ -25,7 +30,7 @@
 <script>
 import { ref } from "vue";
 import { getCourses } from "../api/course";
-import { useRouter } from "vue-router";
+import { useRouter, onBeforeRouteUpdate } from "vue-router";
 export default {
   // data() {
   //   return {
@@ -45,7 +50,15 @@ export default {
       router.push({ name: "detail", params: { id: c.id } });
     };
 
-    return { courses, showDetail, selectedCourse };
+    // 弹窗控制
+    const showMsg = ref(false);
+    onBeforeRouteUpdate((to, from, next) => {
+      if (from.name === "add" && to.query.action === "success") {
+        showMsg.value = true;
+      }
+      next();
+    });
+    return { courses, showDetail, selectedCourse, showMsg };
   },
   // props: {
   //   courses: {

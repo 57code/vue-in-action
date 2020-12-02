@@ -15,7 +15,7 @@ export default {
     const router = useRouter();
     const add = () => {
       addCourse(course.value);
-      router.push("/");
+      router.push({ path: "/course", query: { action: "success" } });
     };
     return { course, add };
   },
