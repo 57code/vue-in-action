@@ -1,31 +1,33 @@
 <template>
-  <message v-if="showMsg" @close="showMsg = false">
-    <template v-slot:title> 恭喜 </template>
-    <template v-slot:default> 新增课程成功！ </template>
-  </message>
+  <div>
+    <message v-if="showMsg" @close="showMsg = false">
+      <template v-slot:title> 恭喜 </template>
+      <template v-slot:default> 新增课程成功！ </template>
+    </message>
 
-  <!-- 条件渲染 -->
-  <p v-if="courses.length === 0">没有任何课程信息</p>
+    <!-- 条件渲染 -->
+    <p v-if="courses.length === 0">没有任何课程信息</p>
 
-  <!-- 新增链接 -->
-  <p>
-    <!-- <router-link to="/course/add">新增</router-link> -->
-    <button @click="$router.push('/course/add')">新增</button>
-  </p>
+    <!-- 新增链接 -->
+    <p>
+      <!-- <router-link to="/course/add">新增</router-link> -->
+      <button @click="$router.push('/course/add')">新增</button>
+    </p>
 
-  <!-- 列表渲染 -->
-  <ul>
-    <li
-      v-for="c in courses"
-      :key="c.id"
-      :class="{ active: selectedCourse === c }"
-      @click="showDetail(c)"
-    >
-      {{ c.name }}
-    </li>
-  </ul>
+    <!-- 列表渲染 -->
+    <ul>
+      <li
+        v-for="c in courses"
+        :key="c.id"
+        :class="{ active: selectedCourse === c }"
+        @click="showDetail(c)"
+      >
+        {{ c.name }}
+      </li>
+    </ul>
 
-  <router-view></router-view>
+    <router-view></router-view>
+  </div>
 </template>
 <script>
 import { ref } from "vue";

@@ -17,13 +17,28 @@
 
   <!-- 计算属性：课程总数 -->
   <!-- <p>课程总数：{{ courseCount }}</p> -->
+  <nav>
+    <NavLink to="https://www.kaikeba.com/">kaikeba</NavLink>
+    <NavLink to="/login">login</NavLink>
+  </nav>
   <!-- 路由出口 -->
-  <router-view></router-view>
+  <router-view v-slot="{ Component }">
+    <keep-alive>
+      <transition name="fade">
+        <component :is="Component"></component>
+      </transition>
+    </keep-alive>
+  </router-view>
 </template>
 
 <script>
 import { reactive, onMounted, ref, toRefs, computed, watch } from "vue";
+import NavLink from "/comps/NavLink.vue";
+
 export default {
+  components: {
+    NavLink,
+  },
   setup() {
     const state = reactive({
       courses: JSON.parse(localStorage.getItem("courses")) || [],
@@ -68,3 +83,14 @@ export default {
   },
 };
 </script>
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>
