@@ -21,6 +21,15 @@
     <NavLink to="https://www.kaikeba.com/">kaikeba</NavLink>
     <NavLink to="/login">login</NavLink>
   </nav>
+
+  <!-- 访问全局状态 -->
+  <p @click="inc">{{ count.count }}</p>
+  <p @click="incBy(2)">incBy: {{ count1 }}</p>
+  <p @click="$store.commit('COUNT_INC')">COUNT_INC: {{ count2.count }}</p>
+  <p @click="incAsync">action inc: {{ count3 }}</p>
+  <p>doubleCount: {{ doubleCount }}</p>
+  <p>nCount: {{ nCount(10) }}</p>
+
   <!-- 路由出口 -->
   <router-view v-slot="{ Component }">
     <keep-alive>
@@ -34,10 +43,16 @@
 <script>
 import { reactive, onMounted, ref, toRefs, computed, watch } from "vue";
 import NavLink from "/comps/NavLink.vue";
+import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
 
 export default {
   components: {
     NavLink,
+  },
+  data() {
+    return {
+      localCount: 10,
+    };
   },
   setup() {
     const state = reactive({
@@ -80,6 +95,29 @@ export default {
     console.log(import.meta.env.VITE_TOKEN);
 
     return { ...toRefs(state), showMsg, addCourse };
+  },
+  computed: {
+    // count() {
+    //   return this.$store.state.count;
+    // },
+    ...mapState(["count"]),
+    ...mapState({
+      count1: state => state.count.count,
+      count2: "count",
+      count3(state) {
+        return state.count.count + this.localCount;
+      },
+    }),
+    ...mapGetters("count", ["doubleCount"]),
+  },
+  methods: {
+    nCount(n) {
+      return this.$store.getters["count/nCount"](n);
+    },
+    ...mapMutations("count", ["inc", "incBy"]),
+    ...mapActions("count", {
+      incAsync: "inc",
+    }),
   },
 };
 </script>
