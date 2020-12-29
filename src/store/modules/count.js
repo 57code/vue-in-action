@@ -1,4 +1,4 @@
-import { COUNT_INC } from "./mutation-types";
+import { COUNT_INC } from "./mutation-types.js";
 
 export default {
   namespaced: true,
