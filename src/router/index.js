@@ -1,5 +1,8 @@
 import { createRouter, createWebHashHistory } from "vue-router";
-import CourseList from "/comps/CourseList.vue";
+import store from "/@/store";
+import { getToken } from "/utils/auth";
+import { Message } from "element3";
+
 // import CourseAdd from "/comps/CourseAdd.vue";
 // import CourseDetail from "/comps/CourseDetail.vue";
 // import NotFound from "/comps/NotFound.vue";
@@ -7,8 +10,9 @@ import CourseList from "/comps/CourseList.vue";
 
 import Layout from "/layout/index.vue";
 
-const CourseAdd = () => import("/comps/CourseAdd.vue");
-const CourseDetail = () => import("/comps/CourseDetail.vue");
+const CourseList = () => import("/views/course/CourseList.vue");
+const CourseDetail = () => import("/views/course/CourseDetail.vue");
+const CourseAdd = () => import("/views/course/CourseAdd.vue");
 const NotFound = () => import("/comps/NotFound.vue");
 const Login = () => import("/comps/Login.vue");
 
@@ -29,12 +33,36 @@ const Login = () => import("/comps/Login.vue");
     activeMenu: '/example/list'  如果设置一个path, sidebar将会在高亮匹配项
   }
  */
-export const routes = [
-  { path: "/", redirect: "/course", hidden: true },
+export const constantRoutes = [
+  { path: "/login", component: Login, hidden: true },
+
+  // 首页
+  {
+    path: "/",
+    component: Layout,
+    redirect: "/dashboard",
+    children: [
+      {
+        path: "dashboard",
+        component: () => import("/views/dashboard/index.vue"),
+        name: "Dashboard",
+        meta: { title: "首页", icon: "el-icon-s-home", affix: true },
+      },
+    ],
+  },
+];
+
+// 权限路由
+export const asyncRoutes = [
   {
     path: "/course",
     component: Layout,
-    meta: { title: "课程列表", icon: "el-icon-notebook-2" },
+    alwaysShow: true,
+    meta: {
+      title: "课程管理",
+      icon: "el-icon-video-camera",
+      roles: ["admin"],
+    },
     children: [
       {
         path: "",
@@ -46,12 +74,72 @@ export const routes = [
         path: "/course/:id",
         name: "detail",
         component: CourseDetail,
-        meta: { title: "课程详情", icon: "el-icon-view" },
+        hidden: true,
+      },
+      {
+        path: "/course-add",
+        name: "course-add",
+        component: CourseAdd,
+        hidden: true,
       },
     ],
   },
 
-  { path: "/login", component: Login, hidden: true },
+  {
+    path: "/example",
+    component: Layout,
+    redirect: "/example/list",
+    name: "Example",
+    meta: {
+      title: "表格",
+      icon: "el-icon-s-help",
+    },
+    children: [
+      {
+        path: "create",
+        component: () => import("/@/views/example/create.vue"),
+        name: "CreateArticle",
+        meta: { title: "创建文章", icon: "el-icon-edit" },
+      },
+      {
+        path: "edit/:id(\\d+)",
+        component: () => import("/@/views/example/edit.vue"),
+        name: "EditArticle",
+        meta: {
+          title: "编辑文章",
+          noCache: true,
+          activeMenu: "/example/list",
+        },
+        hidden: true,
+      },
+      {
+        path: "list",
+        component: () => import("/@/views/example/list.vue"),
+        name: "ArticleList",
+        meta: { title: "文章列表", icon: "el-icon-document" },
+      },
+    ],
+  },
+
+  {
+    path: "/charts",
+    component: Layout,
+    redirect: "noRedirect",
+    name: "Charts",
+    alwaysShow: true,
+    meta: {
+      title: "图表",
+      icon: "el-icon-pie-chart",
+    },
+    children: [
+      {
+        path: "line",
+        component: () => import("/@/views/charts/line.vue"),
+        name: "LineChart",
+        meta: { title: "折线图", noCache: true },
+      },
+    ],
+  },
 
   // 下面配置会匹配所有path，匹配内容放入`$route.params.pathMatch`
   {
@@ -60,70 +148,61 @@ export const routes = [
     component: NotFound,
     hidden: true,
   },
-  // 匹配所有以`/user-`开头path，匹配内容放入`$route.params.afterUser`
-  // { path: '/user-:afterUser(.*)', component: UserGeneric },
-];
-
-// 权限路由
-export const authRoutes = [
-  {
-    path: "/course/add",
-    name: "add",
-    component: CourseAdd,
-    parent: "list",
-  },
 ];
 
 const router = createRouter({
   history: createWebHashHistory(),
-  routes,
+  routes: constantRoutes,
 });
 
-// 是否添加权限路由
-let hasAuth = false;
-const whitelist = ["/login"];
-router.beforeEach((to, from, next) => {
-  if (localStorage.getItem("token")) {
-    // 如果已经授权
-    if (hasAuth) {
-      // 添加过直接放行
-      next();
+// 路由守卫
+const whiteList = ["/login", "/auth-redirect"]; // no redirect whitelist
+router.beforeEach(async (to, from, next) => {
+  // 用户是否登录
+  const hasToken = getToken();
+  if (hasToken) {
+    // 已登录
+    if (to.path === "/login") {
+      // 重定向至首页
+      next({ path: "/" });
     } else {
-      // 动态添加权限路由
-      hasAuth = true;
-      authRoutes.forEach(route => {
-        if (route.parent) {
-          router.addRoute(route.parent, route);
-        } else {
-          router.addRoute(route);
+      // 否则获取用户角色信息
+      const hasRoles = store.getters.roles && store.getters.roles.length > 0;
+      if (hasRoles) {
+        // 以获取
+        next();
+      } else {
+        // 为获取则发送请求获取角色
+        try {
+          // get user info
+          // note: roles must be a object array! such as: ['admin'] or ,['developer','editor']
+          const { roles } = await store.dispatch("user/getInfo");
+
+          // generate accessible routes map based on roles
+          store.dispatch("permission/generateRoutes", roles);
+
+          // hack method to ensure that addRoutes is complete
+          // set the replace: true, so the navigation will not leave a history record
+          next({ ...to, replace: true });
+        } catch (error) {
+          console.log(error);
+          // remove token and go to login page to re-login
+          await store.dispatch("user/resetToken");
+          Message.error(error || "Has Error");
+          next(`/login?redirect=${to.path}`);
         }
-      });
-      next({ ...to, replace: true });
+      }
     }
   } else {
-    if (whitelist.includes(to.path)) {
+    /* has no token*/
+    if (whiteList.indexOf(to.path) !== -1) {
+      // in the free login whitelist, go directly
       next();
     } else {
-      next({ path: "/login", query: { redirect: to.path } });
+      // other pages that do not have permission to access are redirected to the login page.
+      next(`/login?redirect=${to.path}`);
     }
   }
 });
 
-// router.beforeEach((to, from, next) => {
-//   // 判断是否去add
-//   if (to.meta.requiresAuth) {
-//     // 判断是否登录
-//     if (localStorage.getItem("token")) {
-//       // 已登录
-//       next();
-//     } else {
-//       // 未登录
-//       next({ path: "/login", query: { redirect: to.path } });
-//     }
-//   } else {
-//     next();
-//   }
-// });
-
-// 2.创建实例
 export default router;

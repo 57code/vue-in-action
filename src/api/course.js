@@ -1,3 +1,5 @@
+// import request from '/utils/request'
+
 const courses = [
   { id: 1, name: "web全栈架构师", price: 99 },
   { id: 2, name: "web高级工程师", price: 99 },

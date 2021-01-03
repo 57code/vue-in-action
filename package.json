@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development vite",
     "build": "vite build",
-    "lint": "eslint \"src/**/*.{js,vue}\"",
+    "lint": "eslint \"src/**/*.{js,vue}\" --fix",
     "test": "jest --runInBand"
   },
   "gitHooks": {
@@ -17,7 +17,9 @@
   },
   "dependencies": {
     "axios": "^0.21.1",
+    "echarts": "^4.2.1",
     "element3": "0.0.28",
+    "js-cookie": "^2.2.1",
     "mockjs": "^1.1.0",
     "path": "^0.12.7",
     "path-to-regexp": "^6.2.0",

@@ -12,7 +12,7 @@
     <p>
       <!-- <router-link to="/course/add">新增</router-link> -->
       <!-- <button @click="$router.push('/course/add')">新增</button> -->
-      <el-button @click="$router.push('/course/add')">新增</el-button>
+      <el-button @click="$router.push('/course-add')">新增</el-button>
     </p>
 
     <!-- 列表渲染 -->
@@ -32,16 +32,11 @@
 </template>
 <script>
 import { ref } from "vue";
-import { getCourses } from "../api/course";
+import { getCourses } from "/api/course";
 import { useRouter, onBeforeRouteUpdate } from "vue-router";
 import Message from "/comps/Message.vue";
 
 export default {
-  // data() {
-  //   return {
-  //     selectedCourse: "",
-  //   };
-  // },
   components: {
     Message,
   },
@@ -68,12 +63,6 @@ export default {
     });
     return { courses, showDetail, selectedCourse, showMsg };
   },
-  // props: {
-  //   courses: {
-  //     type: Array,
-  //     required: true,
-  //   },
-  // },
 };
 </script>
 <style scoped>

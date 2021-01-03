@@ -16,7 +16,7 @@ service.interceptors.request.use(
   config => {
     // 请求发送之前可以做预处理
     // if (store.getters.token) {
-    // 自定义令牌的字段名为X-Token，根据咱们后台再做修改
+    // // 自定义令牌的字段名为X-Token，根据咱们后台再做修改
     // config.headers["X-Token"] = store.getters.token;
     // }
     config.headers["X-Token"] = import.meta.env.VITE_TOKEN;

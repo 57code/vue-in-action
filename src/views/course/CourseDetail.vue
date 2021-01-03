@@ -8,7 +8,7 @@
 
 <script>
 import { ref, watch } from "vue";
-import { getCourseById } from "../api/course";
+import { getCourseById } from "/api/course";
 import { useRoute } from "vue-router";
 
 export default {
