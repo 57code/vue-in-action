@@ -55,7 +55,7 @@ export default {
       default: false,
     },
   },
-  emits: ["update:page", "update:limit"],
+  emits: ["update:page", "update:limit", "pagination"],
   computed: {
     currentPage: {
       get() {

@@ -55,6 +55,42 @@ export const constantRoutes = [
 // 权限路由
 export const asyncRoutes = [
   {
+    path: "/players",
+    component: Layout,
+    meta: {
+      title: "玩家管理",
+      icon: "el-icon-user-solid",
+    },
+    children: [
+      {
+        path: "list",
+        component: () => import("/@/views/player/list.vue"),
+        meta: {
+          title: "玩家列表",
+          icon: "el-icon-document",
+        },
+      },
+      {
+        path: "create",
+        component: () => import("/@/views/player/create.vue"),
+        meta: {
+          title: "创建玩家",
+          icon: "el-icon-edit",
+        },
+      },
+      {
+        path: "edit/:id(\\d+)",
+        component: () => import("/@/views/player/edit.vue"),
+        hidden: true, // 不需要导航菜单
+        meta: {
+          title: "editPlayer",
+          activeMenu: "/players/list", // 左侧导航菜单相关激活url
+        },
+      },
+    ],
+  },
+
+  {
     path: "/course",
     component: Layout,
     alwaysShow: true,
