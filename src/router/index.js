@@ -91,6 +91,37 @@ export const asyncRoutes = [
   },
 
   {
+    path: "/heros",
+    component: Layout,
+    alwaysShow: true,
+    meta: {
+      title: "英雄",
+      icon: "el-icon-male",
+    },
+    children: [
+      {
+        path: "banpick",
+        component: () => import("/@/views/hero/banpick.vue"),
+        name: "BanPick",
+        meta: {
+          title: "办选率统计",
+          icon: "el-icon-pie-chart",
+        },
+      },
+      {
+        path: "banpick/:id",
+        component: () => import("@/views/hero/banpick-detail.vue"),
+        name: "BanPickDetail",
+        hidden: true,
+        meta: {
+          title: "办选率详情",
+          activeMenu: "/heros/banpick",
+        },
+      },
+    ],
+  },
+
+  {
     path: "/course",
     component: Layout,
     alwaysShow: true,

@@ -108,7 +108,7 @@ module.exports = [
     },
   },
   {
-    url: "/api/players",
+    url: "/api/players/",
     type: "delete",
     response: () => {
       return {

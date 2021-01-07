@@ -17,3 +17,9 @@ export interface Hero {
   icon: string, // 英雄头像图标
   classify: string[] // 英雄分类
 }
+
+export interface BanPick {
+  hero: Hero,
+  ban: number,
+  pick: number
+}

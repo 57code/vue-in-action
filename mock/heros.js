@@ -135,7 +135,7 @@ const banpickDetail = [
 
 module.exports = [
   {
-    url: "/api/heros/getBanPickData",
+    url: "/api/heros/banpick",
     type: "get",
     response: config => {
       const { page = 1, limit = 20 } = config.query;
@@ -153,7 +153,7 @@ module.exports = [
     },
   },
   {
-    url: "/api/heros/getBanPickDetail",
+    url: "/api/heros/banpick/:id",
     type: "get",
     response: config => {
       // 获取英雄id
