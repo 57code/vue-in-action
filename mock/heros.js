@@ -153,11 +153,11 @@ module.exports = [
     },
   },
   {
-    url: "/api/heros/banpick/:id",
+    url: "/api/heros/banpick-detail",
     type: "get",
     response: config => {
       // 获取英雄id
-      const { id } = config.params;
+      const { id } = config.query;
       const detail = banpickDetail.find(item => item.hero.id === +id);
 
       return {

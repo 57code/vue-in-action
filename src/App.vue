@@ -9,7 +9,6 @@ import request from "/utils/request";
 
 async function getUsers() {
   const users = await request("/users");
-  console.log(users);
   return users;
 }
 

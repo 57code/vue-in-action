@@ -94,6 +94,7 @@ export const asyncRoutes = [
     path: "/heros",
     component: Layout,
     alwaysShow: true,
+    redirect: "/heros/banpick",
     meta: {
       title: "英雄",
       icon: "el-icon-male",
@@ -110,7 +111,7 @@ export const asyncRoutes = [
       },
       {
         path: "banpick/:id",
-        component: () => import("@/views/hero/banpick-detail.vue"),
+        component: () => import("/@/views/hero/banpick-detail.vue"),
         name: "BanPickDetail",
         hidden: true,
         meta: {
