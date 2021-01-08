@@ -1,0 +1,25 @@
+<div id="app">
+  <h3>{{title}}</h3>
+  <comp></comp>
+</div>
+
+<script src="../dist/vue.global.js"></script>
+<script>
+  const { createApp } = Vue
+
+  // 1.app实例的获取
+  //    ensureRenderer() => renderer => createAppAPI => createApp => app
+  // 2.mount内部实现
+  //    
+  createApp({
+    data() {
+      return {
+        title: 'hello, vue3!'
+      }
+    },
+  })
+  .component('comp', {
+    template: '<div>comp</div>'
+  })
+  .mount('#app')
+</script>
