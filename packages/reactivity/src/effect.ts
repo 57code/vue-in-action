@@ -164,6 +164,7 @@ export function track(target: object, type: TrackOpTypes, key: unknown) {
   }
 }
 
+// 变更通知：根据前面创建映射关系，根据target和key获取到相关联副作用函数
 export function trigger(
   target: object,
   type: TriggerOpTypes,
@@ -172,6 +173,7 @@ export function trigger(
   oldValue?: unknown,
   oldTarget?: Map<unknown, unknown> | Set<unknown>
 ) {
+  // targetMap就是用来存储关系的数据结构
   const depsMap = targetMap.get(target)
   if (!depsMap) {
     // never been tracked

@@ -621,6 +621,7 @@ export function applyOptions(
     if (deferredData.length) {
       deferredData.forEach(dataFn => resolveData(instance, dataFn, publicThis))
     }
+    // 处理data选项
     if (dataOptions) {
       // @ts-ignore dataOptions is not fully type safe
       resolveData(instance, dataOptions, publicThis)
@@ -893,6 +894,7 @@ function resolveData(
   if (!isObject(data)) {
     __DEV__ && warn(`data() should return an object.`)
   } else if (instance.data === EMPTY_OBJ) {
+    // data中的数据响应式使用reactive api定义
     instance.data = reactive(data)
   } else {
     // existing data: this is a mixin or extends.

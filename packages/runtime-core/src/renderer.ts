@@ -1253,7 +1253,7 @@ function baseCreateRenderer(
     if (__DEV__) {
       startMeasure(instance, `init`)
     }
-    // 组件初始化
+    // 组件初始化：包括了数据响应式
     setupComponent(instance)
     if (__DEV__) {
       endMeasure(instance, `init`)
@@ -1335,8 +1335,13 @@ function baseCreateRenderer(
     optimized
   ) => {
     // create reactive effect for rendering
+    // effect作用是添加一个副作用，它内部的响应式数据如果被触发变更，则componentEffect
+    // 会重复执行
     instance.update = effect(function componentEffect() {
+      // 1.哪触发响应式数据访问
+      // 2.做了什么
       if (!instance.isMounted) {
+        // init
         let vnodeHook: VNodeHook | null | undefined
         const { el, props } = initialVNode
         const { bm, m, parent } = instance
@@ -1354,6 +1359,7 @@ function baseCreateRenderer(
         if (__DEV__) {
           startMeasure(instance, `render`)
         }
+        // 调用根组件的渲染函数获取vnode
         const subTree = (instance.subTree = renderComponentRoot(instance))
         if (__DEV__) {
           endMeasure(instance, `render`)
@@ -1377,6 +1383,7 @@ function baseCreateRenderer(
           if (__DEV__) {
             startMeasure(instance, `patch`)
           }
+          // 初始化patch
           patch(
             null,
             subTree,
@@ -2194,6 +2201,7 @@ function baseCreateRenderer(
         unmount(container._vnode, null, null, true)
       }
     } else {
+      // 初始化执行走这里
       patch(container._vnode || null, vnode, container)
     }
     flushPostFlushCbs()

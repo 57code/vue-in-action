@@ -88,6 +88,7 @@ function createGetter(isReadonly = false, shallow = false) {
       return Reflect.get(arrayInstrumentations, key, receiver)
     }
 
+    // 对象值的获取方式 target[key]
     const res = Reflect.get(target, key, receiver)
 
     if (
@@ -99,6 +100,8 @@ function createGetter(isReadonly = false, shallow = false) {
     }
 
     if (!isReadonly) {
+      // 依赖收集：执行effect(fn), 会立刻执行fn，访问响应式数据时
+      // 就会做依赖收集，将target/key/fn之间建立关系映射
       track(target, TrackOpTypes.GET, key)
     }
 
@@ -116,6 +119,7 @@ function createGetter(isReadonly = false, shallow = false) {
       // Convert returned value into a proxy as well. we do the isObject check
       // here to avoid invalid value warning. Also need to lazy access readonly
       // and reactive here to avoid circular dependency.
+      // 如果值是对象，还会做额外响应式处理
       return isReadonly ? readonly(res) : reactive(res)
     }
 
@@ -148,8 +152,10 @@ function createSetter(shallow = false) {
       isArray(target) && isIntegerKey(key)
         ? Number(key) < target.length
         : hasOwn(target, key)
+        // 1.设置最新的值
     const result = Reflect.set(target, key, value, receiver)
     // don't trigger if target is something up in the prototype chain of original
+    // 2.变更通知
     if (target === toRaw(receiver)) {
       if (!hadKey) {
         trigger(target, TriggerOpTypes.ADD, key, value)
