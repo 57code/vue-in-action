@@ -23,8 +23,11 @@ defineProps({
 const state = reactive({ count: 0 })
 </script>
 
-<style scoped>
+
+
+<style scoped lang="scss">
+$link-color: #d38621;
 a {
-  color: #42b983;
+  color: $link-color;
 }
 </style>
