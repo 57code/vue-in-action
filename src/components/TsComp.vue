@@ -1,5 +1,5 @@
 <template>
-  <h2>{{title}}</h2>
+  <h2>{{ title }}</h2>
   <ul>
     <li v-for="course in courses" :key="course.id">
       {{ course.name }}
@@ -8,30 +8,25 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps } from "vue"
+import { ref, defineProps } from 'vue'
 
 defineProps({
   title: {
     type: String,
-    required: true
-  }
+    required: true,
+  },
 })
 
 type Course = {
-  id: number,
+  id: number
   name: string
 }
 
-const courses = ref<Course[]>([
-  {id:1, name: '开课吧全栈架构师'}
-])
+const courses = ref<Course[]>([{ id: 1, name: '开课吧全栈架构师' }])
 
-fetch("/api/users")
+fetch('/api/users')
   .then(resp => resp.json())
-  .then(json => console.log(json));
-
+  .then(json => console.log(json))
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
