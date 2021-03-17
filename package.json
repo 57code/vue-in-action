@@ -5,7 +5,8 @@
         "dev": "vite",
         "build": "vite build",
         "serve": "vite preview",
-        "lint": "eslint --ext .ts,vue src/** --no-error-on-unmatched-pattern --fix"
+        "lint": "eslint --ext .ts,vue src/** --no-error-on-unmatched-pattern",
+        "lint-fix": "eslint --ext .ts --ext vue src/** --fix"
     },
     "dependencies": {
         "mockjs": "^1.1.0",
